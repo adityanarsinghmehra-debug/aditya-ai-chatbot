@@ -1,19 +1,48 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Basics: Rule-Based vs. LLM Chatbot</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; }
     code, pre { font-family: 'JetBrains Mono', monospace; }
     .chat-scroll::-webkit-scrollbar { width: 6px; }
     .chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    html.dark body { background-color: #0f172a; color: #e2e8f0; }
+    html.dark header,
+    html.dark section,
+    html.dark .bg-white { background-color: #1e293b !important; color: #e2e8f0; }
+    html.dark .bg-slate-50,
+    html.dark .bg-slate-50\/70,
+    html.dark .bg-slate-50\/50,
+    html.dark .bg-slate-50\/40 { background-color: #0f172a !important; }
+    html.dark .bg-slate-100 { background-color: #334155 !important; color: #e2e8f0; }
+    html.dark .bg-indigo-50\/70 { background-color: #1e1b4b !important; }
+    html.dark .bg-indigo-50 { background-color: #312e81 !important; color: #e0e7ff !important; }
+    html.dark .border-slate-200,
+    html.dark .border-slate-100,
+    html.dark .border-indigo-100,
+    html.dark .border-indigo-200 { border-color: #334155 !important; }
+    html.dark .text-slate-900,
+    html.dark .text-slate-800,
+    html.dark .text-slate-700 { color: #f1f5f9 !important; }
+    html.dark .text-slate-600,
+    html.dark .text-slate-500,
+    html.dark .text-slate-400 { color: #94a3b8 !important; }
+    html.dark .text-indigo-950,
+    html.dark .text-indigo-900\/90,
+    html.dark .text-indigo-700 { color: #c7d2fe !important; }
+    html.dark input,
+    html.dark select,
+    html.dark textarea { background-color: #0f172a !important; color: #f1f5f9 !important; border-color: #475569 !important; }
+    html.dark code.bg-slate-200 { background-color: #334155 !important; color: #e2e8f0; }
   </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mr-1{margin-right:0.25rem}.mt-0\.5{margin-top:0.125rem}.mt-3{margin-top:0.75rem}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-2\.5{height:0.625rem}.h-8{height:2rem}.h-\[600px\]{height:600px}.max-h-36{max-height:9rem}.max-h-\[320px\]{max-height:320px}.min-h-screen{min-height:100vh}.w-2\.5{width:0.625rem}.w-8{width:2rem}.w-full{width:100%}.min-w-\[200px\]{min-width:200px}.max-w-6xl{max-width:72rem}.max-w-\[150px\]{max-width:150px}.max-w-\[240px\]{max-width:240px}.max-w-lg{max-width:32rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-indigo-200{--tw-border-opacity:1;border-color:rgb(199 210 254 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50\/70{background-color:rgb(238 242 255 / 0.7)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/40{background-color:rgb(248 250 252 / 0.4)}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-50\/70{background-color:rgb(248 250 252 / 0.7)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-indigo-500{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.p-1{padding:0.25rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.pb-2{padding-bottom:0.5rem}.pb-8{padding-bottom:2rem}.pl-4{padding-left:1rem}.pt-0\.5{padding-top:0.125rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.tracking-wider{letter-spacing:0.05em}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.text-indigo-900\/90{color:rgb(49 46 129 / 0.9)}.text-indigo-950{--tw-text-opacity:1;color:rgb(30 27 75 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.accent-indigo-600{accent-color:#4f46e5}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-indigo-300:hover{--tw-border-opacity:1;border-color:rgb(165 180 252 / var(--tw-border-opacity, 1))}.hover\:bg-amber-100:hover{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-100:hover{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-100:hover{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-50:hover{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:text-emerald-900:hover{--tw-text-opacity:1;color:rgb(6 78 59 / var(--tw-text-opacity, 1))}.hover\:text-indigo-700:hover{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.hover\:text-indigo-800:hover{--tw-text-opacity:1;color:rgb(55 48 163 / var(--tw-text-opacity, 1))}.hover\:text-rose-600:hover{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}@media (min-width: 640px){.sm\:p-4{padding:1rem}.sm\:p-6{padding:1.5rem}.sm\:px-5{padding-left:1.25rem;padding-right:1.25rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}.sm\:text-xs{font-size:0.75rem;line-height:1rem}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:h-\[680px\]{height:680px}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}</style></head>
+</head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
   <!-- Top Header -->
@@ -28,15 +57,22 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button id="btn-save-app" type="button" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+        <button id="btn-dark-mode" type="button"
+          class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+          Dark Mode
+        </button>
+        <button id="btn-save-app" type="button"
+          class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
           Save / Copy App
         </button>
         <!-- Mode Switcher -->
         <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
-        <button id="btn-mode-rule" type="button" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900">
+        <button id="btn-mode-rule" type="button"
+          class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm">
           1. Rule-Based
         </button>
-        <button id="btn-mode-llm" type="button" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm">
+        <button id="btn-mode-llm" type="button"
+          class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900">
           2. LLM Mode
         </button>
         </div>
@@ -52,18 +88,23 @@
       <!-- Chat Status Bar -->
       <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
-          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
-          <span id="status-label" class="text-xs sm:text-sm font-semibold text-slate-700">LLM Mode (System Prompt + History + Temperature)</span>
+          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <span id="status-label" class="text-xs sm:text-sm font-semibold text-slate-700">Rule-Based Engine (Keyword Matcher)</span>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
-          <select id="chat-selector" aria-label="Saved chats on device" class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 max-w-[150px] focus:outline-none focus:ring-2 focus:ring-indigo-500"><option value="chat_1">Chat 1 (0)</option></select>
-          <button id="btn-new-chat" type="button" class="text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition-colors">
+          <select id="chat-selector" aria-label="Saved chats on device"
+            class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 max-w-[150px] focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </select>
+          <button id="btn-new-chat" type="button"
+            class="text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition-colors">
             + New Chat
           </button>
-          <button id="btn-clear" type="button" class="text-xs font-medium text-slate-500 hover:text-rose-600 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors">
+          <button id="btn-clear" type="button"
+            class="text-xs font-medium text-slate-500 hover:text-rose-600 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors">
             Clear Chat
           </button>
-          <button id="btn-undo-clear" type="button" class="hidden text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg transition-colors">
+          <button id="btn-undo-clear" type="button"
+            class="hidden text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg transition-colors">
             Undo Clear
           </button>
         </div>
@@ -72,14 +113,14 @@
       <!-- Cross-Chat Device Memory Bar -->
       <div class="px-4 py-1.5 border-b border-slate-100 bg-slate-50/40 flex flex-wrap items-center justify-between gap-2 text-[11px]">
         <label class="inline-flex items-center gap-1.5 text-slate-600 cursor-pointer select-none">
-          <input id="toggle-cross-chat" type="checkbox" checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+          <input id="toggle-cross-chat" type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
           <span><strong>Share Memory Across Chats</strong> (reuse facts from other saved chats)</span>
         </label>
         <span id="memory-summary" class="text-slate-400 truncate max-w-[240px]">No cross-chat facts saved yet</span>
       </div>
 
       <!-- System Instruction Bar (Visible in LLM Mode) -->
-      <div id="system-prompt-bar" class="px-4 py-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2">
+      <div id="system-prompt-bar" class="hidden px-4 py-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <label for="system-input" class="text-[11px] font-semibold uppercase tracking-wider text-indigo-700">
             System Instruction (Role &amp; Rules)
@@ -90,18 +131,21 @@
             <button type="button" class="preset-btn text-[11px] font-medium px-2 py-0.5 rounded-md bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors" data-preset="You are a strict fact-checker. Answer in 1-2 bullet points and refuse to guess any unverified fact.">Fact-Checker</button>
           </div>
         </div>
-        <input id="system-input" type="text" value="You are a knowledgeable, professional AI Assistant. Provide clear, accurate, and concise answers grounded in the conversation context. If you are unsure of a fact, state that clearly rather than guessing." class="w-full text-xs sm:text-sm bg-white border border-indigo-200 rounded-lg px-3 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <input id="system-input" type="text"
+          value="You are a knowledgeable, professional AI Assistant. Provide clear, accurate, and concise answers grounded in the conversation context. If you are unsure of a fact, state that clearly rather than guessing."
+          class="w-full text-xs sm:text-sm bg-white border border-indigo-200 rounded-lg px-3 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         <div class="flex flex-wrap items-center gap-2 pt-0.5">
           <label for="api-key-input" class="text-[11px] font-semibold text-slate-600 shrink-0">Optional Gemini API Key:</label>
-          <input id="api-key-input" type="password" autocomplete="off" placeholder="Paste key for live AI answers (leave blank for built-in smart demo)" class="flex-1 min-w-[200px] text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input id="api-key-input" type="password" autocomplete="off"
+            placeholder="Paste key for live AI answers (leave blank for built-in smart demo)"
+            class="flex-1 min-w-[200px] text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         </div>
       </div>
 
       <!-- Messages Area -->
       <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 chat-scroll bg-white">
-          <div class="text-center py-10 px-4 text-slate-400 text-sm">
-            Send a message below or click a <strong class="text-slate-600">Try:</strong> chip to test the bot!
-          </div></div>
+        <!-- Populated by JS -->
+      </div>
 
       <!-- Quick Sample Prompts -->
       <div class="px-4 py-2 border-t border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-1.5">
@@ -117,8 +161,11 @@
 
       <!-- Input Form -->
       <form id="chat-form" class="p-3 sm:p-4 border-t border-slate-200 bg-white flex gap-2">
-        <input id="user-input" type="text" autocomplete="off" placeholder="Type a message (e.g., 'hello', 'help', 'tokens')..." class="flex-1 text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl transition-colors shrink-0">
+        <input id="user-input" type="text" autocomplete="off"
+          placeholder="Type a message (e.g., 'hello', 'help', 'tokens')..."
+          class="flex-1 text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+        <button type="submit"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl transition-colors shrink-0">
           Send
         </button>
       </form>
@@ -131,20 +178,25 @@
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm font-bold text-slate-900">Under the Hood (Live State)</h2>
-          <span id="token-badge" class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">~51 tokens</span>
+          <span id="token-badge" class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+            ~0 tokens
+          </span>
         </div>
 
         <!-- Mode-specific explanation box -->
-        <div id="live-trace" class="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl p-3 mb-3 leading-relaxed">Switched to LLM mode! Notice how System Instruction + History are sent together.</div>
+        <div id="live-trace" class="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl p-3 mb-3 leading-relaxed">
+          Waiting for your first message...
+        </div>
 
         <!-- LLM Controls (Creativity / Optional API) -->
-        <div id="llm-controls" class="space-y-3 pt-2 border-t border-slate-100">
+        <div id="llm-controls" class="hidden space-y-3 pt-2 border-t border-slate-100">
           <div>
             <div class="flex justify-between text-xs mb-1">
               <span class="font-semibold text-slate-700">Temperature (Randomness)</span>
               <span id="temp-value" class="font-mono text-indigo-600 font-semibold">0.7</span>
             </div>
-            <input id="temp-slider" type="range" min="0" max="1" step="0.1" value="0.7" class="w-full accent-indigo-600 cursor-pointer">
+            <input id="temp-slider" type="range" min="0" max="1" step="0.1" value="0.7"
+              class="w-full accent-indigo-600 cursor-pointer" />
             <p class="text-[11px] text-slate-400 mt-0.5">0.0 = predictable &amp; factual · 1.0 = creative (more likely to invent things)</p>
           </div>
         </div>
@@ -156,22 +208,21 @@
               Saved on Device (<span id="turn-count">0</span> messages)
             </span>
             <div class="flex items-center gap-1.5">
-              <span id="storage-badge" class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Saved on Device</span>
-              <button id="btn-export-json" type="button" class="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md transition-colors">
+              <span id="storage-badge" class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
+                Checking Storage...
+              </span>
+              <button id="btn-export-json" type="button"
+                class="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md transition-colors">
                 Export JSON
               </button>
-              <button id="btn-import-json" type="button" class="text-[11px] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition-colors">
+              <button id="btn-import-json" type="button"
+                class="text-[11px] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition-colors">
                 Import JSON
               </button>
-              <input id="import-json-input" type="file" accept=".json,application/json" class="hidden">
+              <input id="import-json-input" type="file" accept=".json,application/json" class="hidden" />
             </div>
           </div>
-          <pre id="context-json" class="text-[11px] bg-slate-900 text-slate-200 rounded-xl p-3 max-h-36 overflow-y-auto leading-relaxed">[
-  {
-    "role": "system",
-    "content": "You are a knowledgeable, professional AI Assistant. Provide clear, accurate, and concise answers grounded in the conversation context. If you are unsure of a fact, state that clearly rather than guessing."
-  }
-]</pre>
+          <pre id="context-json" class="text-[11px] bg-slate-900 text-slate-200 rounded-xl p-3 max-h-36 overflow-y-auto leading-relaxed">[]</pre>
         </div>
       </div>
 
@@ -180,28 +231,12 @@
         <div class="px-4 pt-3 pb-2 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
           <h2 class="text-sm font-bold text-slate-900">Annotated Code</h2>
           <div class="flex gap-1">
-            <button type="button" class="code-tab text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100" data-tab="rule">1. Rules</button>
-            <button type="button" class="code-tab text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700" data-tab="llm">2. LLM API</button>
+            <button type="button" class="code-tab text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700" data-tab="rule">1. Rules</button>
+            <button type="button" class="code-tab text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100" data-tab="llm">2. LLM API</button>
             <button type="button" class="code-tab text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-500 hover:bg-slate-100" data-tab="tokens">3. Context</button>
           </div>
         </div>
-        <pre id="code-viewer" class="flex-1 text-[11px] sm:text-xs bg-slate-950 text-emerald-300 p-4 overflow-auto leading-relaxed max-h-[320px]">// 2. LLM CONNECTION: Sending a structured prompt
-async function callLLM(systemPrompt, history, temp) {
-  const response = await fetch("https://api.example.com/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      temperature: temp, // 0 = factual, 1 = creative/risky
-      messages: [
-        // System instruction sets behavior:
-        { role: "system", content: systemPrompt },
-        // Full history gives the model "memory":
-        ...history
-      ]
-    })
-  });
-  return (await response.json()).reply;
-}</pre>
+        <pre id="code-viewer" class="flex-1 text-[11px] sm:text-xs bg-slate-950 text-emerald-300 p-4 overflow-auto leading-relaxed max-h-[320px]"></pre>
       </div>
 
     </section>
@@ -272,13 +307,20 @@ async function callLLM(systemPrompt, history, temp) {
         <button id="btn-close-modal" type="button" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-2 py-1 rounded-lg hover:bg-slate-100">Close</button>
       </div>
       <p id="modal-desc" class="text-xs text-slate-600"></p>
-      <textarea id="modal-textarea" readonly="" rows="8" class="w-full text-[11px] font-mono bg-slate-950 text-emerald-300 rounded-xl p-3 focus:outline-none"></textarea>
+      <textarea id="modal-textarea" rows="8"
+        class="w-full text-[11px] font-mono bg-slate-950 text-emerald-300 rounded-xl p-3 focus:outline-none"></textarea>
       <div class="flex flex-wrap items-center justify-end gap-2">
-        <button id="btn-modal-copy" type="button" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+        <button id="btn-modal-copy" type="button"
+          class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
           Copy to Clipboard
         </button>
-        <button id="btn-modal-download" type="button" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+        <button id="btn-modal-download" type="button"
+          class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
           Try File Download
+        </button>
+        <button id="btn-modal-restore" type="button"
+          class="hidden px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors">
+          Restore Pasted JSON
         </button>
       </div>
     </div>
@@ -366,6 +408,14 @@ async function callLLM(systemPrompt, history, temp) {
       const apiKeyEl = document.getElementById("api-key-input");
       const apiKey = apiKeyEl ? apiKeyEl.value.trim() : "";
       const useCrossChat = document.getElementById("toggle-cross-chat")?.checked ?? true;
+      const userMsgsPre = history.filter(m => m.role === "user").map(m => m.content);
+      for (let i = userMsgsPre.length - 1; i >= 0; i--) {
+        const m = userMsgsPre[i].match(/(?:my name is|my name's|call me|i am|i'm)\s+([a-zA-Z]{2,})/i);
+        if (m && !["my", "is", "that", "this", "name", "here", "doing"].includes(m[1].toLowerCase())) {
+          sharedMemory.name = m[1];
+          break;
+        }
+      }
 
       // If the user provided a Gemini API key, call the live Gemini model!
       if (apiKey) {
@@ -383,9 +433,15 @@ async function callLLM(systemPrompt, history, temp) {
                 "x-goog-api-key": apiKey
               },
               body: JSON.stringify({
-                systemInstruction: { parts: [{ text: useCrossChat && (sharedMemory.name || sharedMemory.notes.length)
-                  ? `${systemInstruction}\n\nShared user memory from previous chats on this device: ${sharedMemory.name ? `User's name is ${sharedMemory.name}. ` : ""}${sharedMemory.notes.join("; ")}`
-                  : systemInstruction }] },
+                systemInstruction: { parts: [{ text: (() => {
+                  if (!useCrossChat) return systemInstruction;
+                  const prev = getPreviousConversationsContext();
+                  const memParts = [];
+                  if (sharedMemory.name) memParts.push(`User's name is ${sharedMemory.name}.`);
+                  if (sharedMemory.notes.length) memParts.push(`Notes: ${sharedMemory.notes.join("; ")}`);
+                  if (prev.summaryText) memParts.push(`Previous conversations on this device:\n${prev.summaryText}`);
+                  return memParts.length ? `${systemInstruction}\n\n${memParts.join("\n")}` : systemInstruction;
+                })() }] },
                 contents,
                 generationConfig: { temperature }
               })
@@ -460,16 +516,18 @@ async function callLLM(systemPrompt, history, temp) {
           : "You haven't shared your name yet in this conversation. Tell me your name and I'll remember it!";
       } else if (/(?:what is your name|what's your name|who are you)/i.test(lastUserMsg)) {
         reply = `I'm your AI Assistant, guided by your current System Instruction.${rememberedName ? ` How can I help you today, ${rememberedName}?` : " How can I help you today?"}`;
-      } else if (/(?:what do you remember|what did i say|remember)/i.test(lastUserMsg)) {
+      } else if (/(?:previous|earlier|last chat|before|what do you remember|what did i say|remember)/i.test(lastUserMsg)) {
+        const prev = useCrossChat ? getPreviousConversationsContext() : { summaryText: "", chatCount: 0, msgCount: 0 };
         if (lastUserMsg.startsWith("remember")) {
           reply = `Noted${rememberedName ? `, ${rememberedName}` : ""}! I'll keep "${lastUserRaw}" in our conversation context.`;
-        } else if (rememberedNotes.length > 0 || rememberedName) {
+        } else if (rememberedNotes.length > 0 || rememberedName || prev.chatCount > 0) {
           const parts = [];
           if (rememberedName) parts.push(`your name is ${rememberedName}`);
           if (rememberedNotes.length > 0) parts.push(`you asked me to remember "${rememberedNotes[rememberedNotes.length - 1]}"`);
-          reply = `Based on our ${history.length} messages in context, I remember that ${parts.join(" and ")}.`;
+          if (prev.chatCount > 0) parts.push(`we have ${prev.chatCount} previous saved chat(s) (${prev.msgCount} messages) on this device`);
+          reply = `From your device memory, I remember that ${parts.join(", and ")}.${prev.summaryText ? " Recent topic: " + prev.summaryText.split("\n")[0].slice(0, 140) : ""}`;
         } else {
-          reply = "I have our full conversation in context, though you haven't asked me to remember any specific facts yet.";
+          reply = "I have our current conversation in context, and no previous chats are saved yet.";
         }
       } else if (lastUserMsg.includes("token")) {
         reply = "Tokens are the text chunks a language model processes—roughly 4 characters or ¾ of a word each. Both your conversation history and my replies count toward the token limit.";
@@ -509,6 +567,31 @@ async function callLLM(systemPrompt, history, temp) {
     const STORAGE_KEY_ACTIVE_CHAT = "chatbot_basics_active_chat_v2";
     const STORAGE_KEY_SYSTEM = "chatbot_basics_system_v2";
     const STORAGE_KEY_MEMORY = "chatbot_basics_shared_memory_v2";
+    const STORAGE_KEY_THEME = "chatbot_basics_theme_v1";
+
+    function getPreviousConversationsContext() {
+      const otherChats = Object.values(savedChats)
+        .filter(c => c.id !== activeChatId && Array.isArray(c.messages) && c.messages.length > 0);
+      if (otherChats.length === 0) return { summaryText: "", chatCount: 0, msgCount: 0 };
+
+      let totalMsgs = 0;
+      const lines = otherChats.slice(-5).map(chat => {
+        const recent = chat.messages.slice(-6).map(m => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`).join(" | ");
+        totalMsgs += chat.messages.length;
+        return `[Chat "${chat.title}"]: ${recent}`;
+      });
+      return {
+        summaryText: lines.join("\n"),
+        chatCount: otherChats.length,
+        msgCount: totalMsgs
+      };
+    }
+
+    function applyTheme(isDark) {
+      document.documentElement.classList.toggle("dark", isDark);
+      const btn = document.getElementById("btn-dark-mode");
+      if (btn) btn.textContent = isDark ? "Light Mode" : "Dark Mode";
+    }
 
     let currentMode = "rule"; // "rule" or "llm"
     let savedChats = {};      // { chatId: { id, title, updatedAt, messages: [] } }
@@ -574,6 +657,8 @@ async function callLLM(systemPrompt, history, temp) {
             };
           }
         }
+        const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+        if (savedTheme === "dark") applyTheme(true);
         const savedSystem = localStorage.getItem(STORAGE_KEY_SYSTEM);
         if (savedSystem && systemInputEl) systemInputEl.value = savedSystem;
       } catch (err) {
@@ -840,6 +925,14 @@ function onUserSend(text) {
       updateTelemetry();
     });
 
+    document.getElementById("btn-dark-mode").addEventListener("click", () => {
+      const nextDark = !document.documentElement.classList.contains("dark");
+      applyTheme(nextDark);
+      try {
+        localStorage.setItem(STORAGE_KEY_THEME, nextDark ? "dark" : "light");
+      } catch (err) {}
+    });
+
     document.querySelectorAll(".preset-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         systemInputEl.value = btn.dataset.preset;
@@ -887,26 +980,53 @@ function onUserSend(text) {
     const btnModalDownload = document.getElementById("btn-modal-download");
     let modalFileInfo = { filename: "export.txt", mime: "text/plain", content: "" };
 
-    function openExportModal(title, desc, filename, mime, content) {
+    const btnModalRestore = document.getElementById("btn-modal-restore");
+    function openExportModal(title, desc, filename, mime, content, allowRestore = false) {
       modalFileInfo = { filename, mime, content };
       modalTitleEl.textContent = title;
       modalDescEl.textContent = desc;
       modalTextareaEl.value = content;
       btnModalCopy.textContent = "Copy to Clipboard";
+      btnModalRestore.classList.toggle("hidden", !allowRestore);
       exportModal.classList.remove("hidden");
     }
 
+    function restoreFromJsonText(jsonText, sourceLabel) {
+      const parsed = JSON.parse(String(jsonText || "{}"));
+      if (parsed.chats && typeof parsed.chats === "object") {
+        savedChats = parsed.chats;
+        const ids = Object.keys(savedChats);
+        if (ids.length > 0) activeChatId = ids[0];
+      }
+      if (parsed.sharedMemory && typeof parsed.sharedMemory === "object") {
+        sharedMemory = {
+          name: parsed.sharedMemory.name || null,
+          notes: Array.isArray(parsed.sharedMemory.notes) ? parsed.sharedMemory.notes : []
+        };
+      }
+      ensureActiveChat();
+      saveHistoryToDevice();
+      renderMessages();
+      updateTelemetry(`Restored ${Object.keys(savedChats).length} chat(s) from ${sourceLabel}.`);
+    }
+
+    btnModalRestore.addEventListener("click", () => {
+      try {
+        restoreFromJsonText(modalTextareaEl.value, "pasted JSON");
+        exportModal.classList.add("hidden");
+      } catch (err) {
+        modalDescEl.textContent = "Invalid JSON—make sure you pasted the complete exported JSON text.";
+      }
+    });
+
     function triggerDownload(filename, mime, content) {
       try {
-        const blob = new Blob([content], { type: mime });
-        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = url;
+        a.href = `data:${mime};charset=utf-8,` + encodeURIComponent(content);
         a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
       } catch (err) {}
     }
 
@@ -919,12 +1039,14 @@ function onUserSend(text) {
         await navigator.clipboard.writeText(modalFileInfo.content);
         btnModalCopy.textContent = "Copied!";
       } catch (err) {
+        modalTextareaEl.focus();
         modalTextareaEl.select();
+        modalTextareaEl.setSelectionRange(0, 9999999);
         try {
           document.execCommand("copy");
           btnModalCopy.textContent = "Copied!";
         } catch (e) {
-          btnModalCopy.textContent = "Select & Copy Manually";
+          btnModalCopy.textContent = "Tap & Hold Text Above to Copy";
         }
       }
     });
@@ -954,11 +1076,12 @@ function onUserSend(text) {
       const jsonText = JSON.stringify(payload, null, 2);
       triggerDownload("chatbot-device-history.json", "application/json", jsonText);
       openExportModal(
-        "Exported Chat History (JSON)",
-        "If your phone blocked the automatic file download, tap 'Copy to Clipboard' to save your history.",
+        "Export / Restore Chat History (JSON)",
+        "Copy this JSON to back up your chats, or paste a saved JSON here and tap 'Restore Pasted JSON'.",
         "chatbot-device-history.json",
         "application/json",
-        jsonText
+        jsonText,
+        true
       );
       updateTelemetry("Opened Export JSON view (ready to download or copy).");
     });
@@ -1034,6 +1157,5 @@ function onUserSend(text) {
         : "Waiting for your first message..."
     );
   </script>
-
-
-</body></html>
+</body>
+</html>
