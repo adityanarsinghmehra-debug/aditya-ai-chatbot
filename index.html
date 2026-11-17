@@ -45,36 +45,33 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-  <!-- Top Header -->
-  <header class="bg-white border-b border-slate-200 px-4 py-3 sm:px-6">
-    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <h1 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600 text-white text-sm font-bold">AI</span>
-          Chatbot Basics Lab
-        </h1>
-        <p class="text-xs sm:text-sm text-slate-500">Compare keyword rules with how a Language Model (LLM) works under the hood</p>
+  <!-- Compact Top Header -->
+  <header class="bg-white border-b border-slate-200 px-3 py-2 sm:px-6">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab</h1>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="flex flex-wrap items-center gap-1.5">
         <button id="btn-dark-mode" type="button"
-          class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+          class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
           Dark Mode
         </button>
         <button id="btn-save-app" type="button"
-          class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
-          Save / Copy App
+          class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+          Save App
         </button>
         <!-- Mode Switcher -->
-        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
-        <button id="btn-mode-rule" type="button"
-          class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm">
-          1. Rule-Based
-        </button>
-        <button id="btn-mode-llm" type="button"
-          class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900">
-          2. LLM Mode
-        </button>
+        <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+          <button id="btn-mode-rule" type="button"
+            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm">
+            1. Rules
+          </button>
+          <button id="btn-mode-llm" type="button"
+            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900">
+            2. LLM Mode
+          </button>
         </div>
       </div>
     </div>
@@ -84,7 +81,7 @@
   <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
 
     <!-- Left Column: Interactive Chat -->
-    <section class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[600px] lg:h-[680px] overflow-hidden">
+    <section class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[78vh] lg:h-[740px] overflow-hidden">
       <!-- Chat Status Bar -->
       <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
@@ -143,12 +140,12 @@
       </div>
 
       <!-- Messages Area -->
-      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 chat-scroll bg-white">
+      <div id="chat-messages" class="flex-1 min-h-[320px] max-h-[55vh] lg:max-h-none overflow-y-auto p-4 space-y-3 chat-scroll bg-white">
         <!-- Populated by JS -->
       </div>
 
       <!-- Quick Sample Prompts -->
-      <div class="px-4 py-2 border-t border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-1.5">
+      <div class="px-3 py-1.5 border-t border-slate-100 bg-slate-50/50 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap">
         <span class="text-[11px] font-medium text-slate-400 mr-1">Try:</span>
         <button type="button" class="quick-prompt text-xs bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-700 px-2.5 py-1 rounded-full transition-colors" data-prompt="Hello!">Hello!</button>
         <button type="button" class="quick-prompt text-xs bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-700 px-2.5 py-1 rounded-full transition-colors" data-prompt="What is a token?">What is a token?</button>
@@ -160,12 +157,12 @@
       </div>
 
       <!-- Input Form -->
-      <form id="chat-form" class="p-3 sm:p-4 border-t border-slate-200 bg-white flex gap-2">
-        <input id="user-input" type="text" autocomplete="off"
-          placeholder="Type a message (e.g., 'hello', 'help', 'tokens')..."
-          class="flex-1 text-sm border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+      <form id="chat-form" class="p-3 sm:p-4 border-t border-slate-200 bg-white flex items-end gap-2">
+        <textarea id="user-input" rows="2" autocomplete="off"
+          placeholder="Type a message here..."
+          class="flex-1 text-base leading-snug border border-slate-300 rounded-xl px-4 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
         <button type="submit"
-          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl transition-colors shrink-0">
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold px-5 py-3 rounded-xl transition-colors shrink-0">
           Send
         </button>
       </form>
@@ -424,10 +421,13 @@
             role: m.role === "assistant" ? "model" : "user",
             parts: [{ text: m.content }]
           }));
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(new Error("Request timed out after 45 seconds")), 45000);
           const res = await fetch(
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
             {
               method: "POST",
+              signal: controller.signal,
               headers: {
                 "Content-Type": "application/json",
                 "x-goog-api-key": apiKey
@@ -447,18 +447,24 @@
               })
             }
           );
+          clearTimeout(timeoutId);
           if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
             throw new Error(errData?.error?.message || `API error (${res.status})`);
           }
           const data = await res.json();
-          const liveReply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parts = data?.candidates?.[0]?.content?.parts || [];
+          const liveReply = parts.map(p => p.text || "").filter(Boolean).join("\n").trim();
           if (liveReply) {
             return {
               reply: liveReply,
               trace: `Live Gemini API response · Sent system instruction + ${history.length} history messages at temperature ${temperature}.`
             };
           }
+          return {
+            reply: "Gemini returned an empty response. Try rephrasing or checking your System Instruction.",
+            trace: "Live Gemini API returned no text parts."
+          };
         } catch (err) {
           return {
             reply: `Could not reach the live Gemini API (${err.message}). Check your API key or clear it to use the built-in assistant.`,
@@ -814,8 +820,8 @@ function onUserSend(text) {
 
         const bubble = document.createElement("div");
         bubble.className = isUser
-          ? "max-w-[82%] bg-indigo-600 text-white text-sm px-4 py-2.5 rounded-2xl rounded-br-sm shadow-sm"
-          : "max-w-[82%] bg-slate-100 text-slate-800 text-sm px-4 py-2.5 rounded-2xl rounded-bl-sm border border-slate-200";
+          ? "max-w-[88%] bg-indigo-600 text-white text-base leading-relaxed px-4 py-3 rounded-2xl rounded-br-sm shadow-sm whitespace-pre-wrap"
+          : "max-w-[88%] bg-slate-100 text-slate-800 text-base leading-relaxed px-4 py-3 rounded-2xl rounded-bl-sm border border-slate-200 whitespace-pre-wrap";
         bubble.textContent = msg.content;
 
         wrapper.appendChild(bubble);
@@ -848,8 +854,8 @@ function onUserSend(text) {
     function setMode(mode) {
       currentMode = mode;
       if (mode === "rule") {
-        btnModeRule.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm";
-        btnModeLlm.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900";
+        btnModeRule.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
+        btnModeLlm.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
         systemPromptBar.classList.add("hidden");
         llmControlsEl.classList.add("hidden");
         statusDotEl.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
@@ -857,8 +863,8 @@ function onUserSend(text) {
         renderCodeTab("rule");
         updateTelemetry("Switched to Rule-Based mode. Only exact keywords will match.");
       } else {
-        btnModeLlm.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-indigo-700 shadow-sm";
-        btnModeRule.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900";
+        btnModeLlm.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
+        btnModeRule.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
         systemPromptBar.classList.remove("hidden");
         llmControlsEl.classList.remove("hidden");
         statusDotEl.className = "w-2.5 h-2.5 rounded-full bg-indigo-500";
@@ -876,16 +882,30 @@ function onUserSend(text) {
       chatHistory.push({ role: "user", content: trimmed });
       renderMessages();
 
+      // Show a temporary "Thinking..." bubble while waiting for a reply
+      const thinkingWrap = document.createElement("div");
+      thinkingWrap.className = "flex justify-start";
+      thinkingWrap.innerHTML = `<div class="bg-slate-100 text-slate-500 text-base px-4 py-2.5 rounded-2xl rounded-bl-sm border border-slate-200 animate-pulse">Thinking...</div>`;
+      chatMessagesEl.appendChild(thinkingWrap);
+      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+
       // 2. Route to either Rule-Based or LLM engine
       let result;
-      if (currentMode === "rule") {
-        result = getRuleBasedReply(trimmed);
-      } else {
-        result = await callLanguageModel(
-          systemInputEl.value,
-          chatHistory,
-          parseFloat(tempSliderEl.value)
-        );
+      try {
+        if (currentMode === "rule") {
+          result = getRuleBasedReply(trimmed);
+        } else {
+          result = await callLanguageModel(
+            systemInputEl.value,
+            chatHistory,
+            parseFloat(tempSliderEl.value)
+          );
+        }
+      } catch (err) {
+        result = {
+          reply: `Something went wrong (${err.message}).`,
+          trace: `Error: ${err.message}`
+        };
       }
 
       // 3. Add bot reply to history and save to device so context persists
@@ -901,6 +921,15 @@ function onUserSend(text) {
       const val = userInputEl.value;
       userInputEl.value = "";
       handleSend(val);
+    });
+
+    userInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        const val = userInputEl.value;
+        userInputEl.value = "";
+        handleSend(val);
+      }
     });
 
     document.querySelectorAll(".quick-prompt").forEach(btn => {
