@@ -53,11 +53,25 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
-        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.1</span></h1>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.4</span></h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-1.5">
+        <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+          <button id="btn-page-chat" type="button"
+            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm">
+            Chat
+          </button>
+          <button id="btn-page-help" type="button"
+            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900">
+            Help
+          </button>
+        </div>
         <span id="user-badge" class="hidden text-[11px] font-semibold px-2 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200"></span>
+        <button id="btn-signin-header" type="button"
+          class="hidden px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors">
+          Sign In
+        </button>
         <button id="btn-logout" type="button"
           class="hidden px-2 py-1 rounded-lg text-[11px] font-semibold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-colors">
           Log Out
@@ -66,31 +80,20 @@
           class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
           Dark Mode
         </button>
-        <!-- Mode Switcher -->
-        <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-          <button id="btn-mode-rule" type="button"
-            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm">
-            1. Rules
-          </button>
-          <button id="btn-mode-llm" type="button"
-            class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900">
-            2. LLM Mode
-          </button>
-        </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Workspace -->
-  <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+  <!-- Page 1: Full-Width Large Conversation Page -->
+  <main id="page-chat" class="flex-1 max-w-4xl w-full mx-auto p-2 sm:p-5 flex flex-col">
 
     <!-- Left Column: Interactive Chat -->
-    <section class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[78vh] lg:h-[740px] overflow-hidden">
+    <section class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[82vh] overflow-hidden">
       <!-- Chat Status Bar -->
       <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
-          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-          <span id="status-label" class="text-xs sm:text-sm font-semibold text-slate-700">Rule-Based Engine (Keyword Matcher)</span>
+          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+          <span id="status-label" class="text-xs sm:text-sm font-semibold text-slate-700">AI Assistant (Local + Gemini Ready)</span>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <select id="chat-selector" aria-label="Saved chats on device"
@@ -121,7 +124,7 @@
       </div>
 
       <!-- System Instruction Bar (Visible in LLM Mode) -->
-      <div id="system-prompt-bar" class="hidden px-4 py-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2">
+      <div id="system-prompt-bar" class="px-4 py-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <label for="system-input" class="text-[11px] font-semibold uppercase tracking-wider text-indigo-700">
             System Instruction (Role &amp; Rules)
@@ -147,10 +150,15 @@
             <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite</option>
           </select>
         </div>
+        <div id="llm-controls" class="flex items-center gap-3 pt-1">
+          <span class="text-[11px] font-semibold text-slate-600 shrink-0">Temperature: <span id="temp-value" class="font-mono text-indigo-600">1</span></span>
+          <input id="temp-slider" type="range" min="0" max="1" step="0.1" value="1"
+            class="flex-1 accent-indigo-600 cursor-pointer" />
+        </div>
       </div>
 
       <!-- Messages Area -->
-      <div id="chat-messages" class="flex-1 min-h-[320px] max-h-[55vh] lg:max-h-none overflow-y-auto p-4 space-y-3 chat-scroll bg-white">
+      <div id="chat-messages" class="flex-1 min-h-[400px] overflow-y-auto p-4 sm:p-5 space-y-3.5 chat-scroll bg-white">
         <!-- Populated by JS -->
       </div>
 
@@ -178,72 +186,31 @@
       </form>
     </section>
 
-    <!-- Right Column: Under-the-Hood Inspector & Annotated Code -->
-    <section class="lg:col-span-5 flex flex-col gap-4">
-
-      <!-- Live Telemetry / Context Window Card -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-bold text-slate-900">Under the Hood (Live State)</h2>
-          <span id="token-badge" class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-            ~0 tokens
-          </span>
-        </div>
-
-        <!-- Mode-specific explanation box -->
-        <div id="live-trace" class="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl p-3 mb-3 leading-relaxed">
-          Waiting for your first message...
-        </div>
-
-        <!-- LLM Controls (Creativity / Optional API) -->
-        <div id="llm-controls" class="hidden space-y-3 pt-2 border-t border-slate-100">
-          <div>
-            <div class="flex justify-between text-xs mb-1">
-              <span class="font-semibold text-slate-700">Temperature (Randomness)</span>
-              <span id="temp-value" class="font-mono text-indigo-600 font-semibold">1</span>
-            </div>
-            <input id="temp-slider" type="range" min="0" max="1" step="0.1" value="1"
-              class="w-full accent-indigo-600 cursor-pointer" />
-            <p class="text-[11px] text-slate-400 mt-0.5">0.0 = predictable &amp; factual · 1.0 = creative (more likely to invent things)</p>
-          </div>
-        </div>
-
-        <!-- Context History Preview -->
-        <div class="mt-3">
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-              Saved on Device (<span id="turn-count">0</span> messages)
-            </span>
-            <div class="flex items-center gap-1.5">
-              <span id="storage-badge" class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
-                Checking Storage...
-              </span>
-              <button id="btn-export-json" type="button"
-                class="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-md transition-colors">
-                Export JSON
-              </button>
-              <button id="btn-import-json" type="button"
-                class="text-[11px] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition-colors">
-                Import JSON
-              </button>
-              <button id="btn-paste-json" type="button"
-                class="text-[11px] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition-colors">
-                Paste JSON
-              </button>
-              <input id="import-json-input" type="file" accept=".json,application/json" class="hidden" />
-            </div>
-          </div>
-          <pre id="context-json" class="text-[11px] bg-slate-900 text-slate-200 rounded-xl p-3 max-h-36 overflow-y-auto leading-relaxed">[]</pre>
-        </div>
-      </div>
-
-
-
-    </section>
   </main>
 
-  <!-- Comprehensive AI Basics Guide & Reference Section -->
-  <section class="max-w-6xl w-full mx-auto px-4 sm:px-6 pb-8 space-y-5">
+  <!-- Page 2: Dedicated Help & Guide Page -->
+  <section id="page-help" class="hidden flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 pb-8 space-y-5">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 class="text-sm sm:text-base font-bold text-slate-900">Backup &amp; Restore Chats</h2>
+        <p class="text-xs text-slate-500">Export, import, or paste your saved conversations anytime.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button id="btn-export-json" type="button"
+          class="text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+          Export JSON
+        </button>
+        <button id="btn-import-json" type="button"
+          class="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors">
+          Import JSON
+        </button>
+        <button id="btn-paste-json" type="button"
+          class="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors">
+          Paste JSON
+        </button>
+        <input id="import-json-input" type="file" accept=".json,application/json" class="hidden" />
+      </div>
+    </div>
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
       <div class="mb-4">
         <h2 class="text-base sm:text-lg font-bold text-slate-900">AI Basics Guide: How This App Works</h2>
@@ -252,47 +219,46 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <article class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-          <h3 class="text-sm font-bold text-slate-900 mb-1.5">1. Rules vs. Language Models</h3>
+          <h3 class="text-sm font-bold text-slate-900 mb-1.5">1. How Language Models Work</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            In <strong>Rule-Based</strong> mode, <code class="bg-slate-200 px-1 rounded">getRuleBasedReply()</code> searches <code class="bg-slate-200 px-1 rounded">KEYWORD_RULES</code> for exact words and returns a hard-coded string. A <strong>Language Model (LLM)</strong> instead predicts the most likely next piece of text based on patterns learned from massive amounts of writing.
+            A <strong>Language Model (LLM)</strong> predicts the most likely next piece of text based on patterns learned from massive amounts of writing. Without an API key, this app uses a built-in Local Assistant; paste a Gemini API key to connect directly to live Gemini models.
           </p>
         </article>
 
         <article class="p-4 rounded-xl bg-slate-50 border border-slate-200">
           <h3 class="text-sm font-bold text-slate-900 mb-1.5">2. Prompts &amp; System Instructions</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            Your typed message is the <strong>user prompt</strong>. The <strong>System Instruction</strong> (sent as <code class="bg-slate-200 px-1 rounded">{ role: "system" }</code> in <code class="bg-slate-200 px-1 rounded">callLanguageModel()</code>) acts as a hidden job description that sets the bot's persona, tone, and rules before the chat begins.
+            Your typed message is the <strong>user prompt</strong>. The <strong>System Instruction</strong> acts as a behind-the-scenes job description that sets the bot's persona, tone, and rules—try the <em>Professional</em>, <em>Coding Tutor</em>, or <em>Fact-Checker</em> presets above the chat.
           </p>
         </article>
 
         <article class="p-4 rounded-xl bg-slate-50 border border-slate-200">
           <h3 class="text-sm font-bold text-slate-900 mb-1.5">3. Tokens &amp; Limits</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            Models read and generate text in chunks called <strong>tokens</strong>—roughly 4 characters or ¾ of an English word each. <code class="bg-slate-200 px-1 rounded">estimateTokens()</code> updates the live badge above because both your input history and the model's reply count toward token limits and API cost.
+            Models read and generate text in small chunks called <strong>tokens</strong>—roughly 4 characters or ¾ of an English word each. Both your conversation history and the model's replies count toward token limits and API usage.
           </p>
         </article>
 
         <article class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-          <h3 class="text-sm font-bold text-slate-900 mb-1.5">4. Context Across Turns</h3>
+          <h3 class="text-sm font-bold text-slate-900 mb-1.5">4. Context &amp; Cloud Memory</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            LLMs are stateless—they forget everything once a reply finishes. To create memory, <code class="bg-slate-200 px-1 rounded">handleSend()</code> pushes each turn into <code class="bg-slate-200 px-1 rounded">chatHistory</code> and resends the entire array on every request. Watch the dark JSON box grow with each message!
+            LLMs are stateless—they forget everything once a reply finishes. This app saves your messages in <strong>Cloud Firestore</strong> (for signed-in accounts) or on your device (for Guest Mode) and resends your conversation context on every turn.
           </p>
         </article>
 
         <article class="p-4 rounded-xl bg-slate-50 border border-slate-200">
           <h3 class="text-sm font-bold text-slate-900 mb-1.5">5. Hallucinations &amp; Temperature</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            Because LLMs predict <em>plausible-sounding</em> text rather than checking a verified database, they can invent facts confidently. Raising the <strong>Temperature</strong> slider (toward <code class="bg-slate-200 px-1 rounded">1.0</code>) increases randomness and creativity—and also increases hallucination risk.
+            Because LLMs predict <em>plausible-sounding</em> text rather than checking a verified database, they can invent facts confidently. Raising the <strong>Temperature</strong> slider (toward <code class="bg-slate-200 px-1 rounded">1.0</code>) increases creativity—and hallucination risk.
           </p>
         </article>
 
         <article class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200">
-          <h3 class="text-sm font-bold text-indigo-950 mb-1.5">6. Next Steps &amp; Running Locally</h3>
+          <h3 class="text-sm font-bold text-indigo-950 mb-1.5">6. Accounts, Guest Mode &amp; Backups</h3>
           <ul class="text-xs text-indigo-900/90 space-y-1.5 list-disc pl-4 leading-relaxed">
-            <li><strong>Run locally:</strong> Download this single <code class="bg-indigo-100 px-1 rounded">.html</code> file and double-click it to open in any browser—no install needed.</li>
-            <li><strong>Give it a persona:</strong> Edit the System Instruction (e.g., <em>"Speak like a friendly pirate"</em>).</li>
-            <li><strong>Add knowledge (RAG):</strong> Paste your own notes/FAQs into the prompt so the bot answers from real facts.</li>
-            <li><strong>Connect a real API:</strong> Move <code class="bg-indigo-100 px-1 rounded">callLanguageModel()</code> to a backend server so your API key stays secret.</li>
+            <li><strong>Cloud Sync:</strong> Sign in with Google or Email/Password to access your chats from any phone or computer.</li>
+            <li><strong>Guest Mode:</strong> Try the chatbot instantly without signing in (saved locally on your device).</li>
+            <li><strong>Backups:</strong> Use <strong>Export JSON</strong>, <strong>Import JSON</strong>, or <strong>Paste JSON</strong> above to save or restore chats anytime.</li>
           </ul>
         </article>
       </div>
@@ -357,6 +323,11 @@
           Log In
         </button>
       </form>
+
+      <button id="btn-guest-login" type="button"
+        class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold py-2 rounded-xl transition-colors border border-slate-200">
+        Continue as Guest (No Sign-In)
+      </button>
     </div>
   </div>
 
@@ -388,78 +359,6 @@
   </div>
 
   <script>
-    // =========================================================================
-    // 1. RULE-BASED CHATBOT (No AI — just exact keyword matching!)
-    // =========================================================================
-    // A dictionary mapping lowercase keywords to fixed, pre-written replies.
-    const KEYWORD_RULES = [
-      {
-        keywords: ["hello", "hi", "hey"],
-        reply: "Hi there! I'm a simple rule-based bot. Try asking about 'tokens', 'ai', or 'help'."
-      },
-      {
-        keywords: ["help", "what can you do"],
-        reply: "In Rule-Based mode, I only understand specific keywords: hello, help, token, ai, weather, bye."
-      },
-      {
-        keywords: ["token", "tokens"],
-        reply: "Tokens are small chunks of text (roughly 3/4 of a word). LLMs read and charge by tokens!"
-      },
-      {
-        keywords: ["ai", "llm", "language model"],
-        reply: "A Language Model predicts the most likely next token based on patterns it learned from huge amounts of text."
-      },
-      {
-        keywords: ["weather"],
-        reply: "I can't check live weather! A rule-based bot only knows what was hard-coded into it."
-      },
-      {
-        keywords: ["system", "prompt", "instruction"],
-        reply: "A prompt is what you ask the bot; a System Instruction is the behind-the-scenes rulebook that sets its persona and boundaries."
-      },
-      {
-        keywords: ["context", "memory", "history"],
-        reply: "Rule-based bots have no memory! In LLM Mode, the app stores every turn in chatHistory[] and resends it so the model remembers."
-      },
-      {
-        keywords: ["hallucinate", "hallucination", "make things up", "temperature"],
-        reply: "LLMs predict plausible words, not verified facts—so high Temperature can make them invent confident-sounding nonsense."
-      },
-      {
-        keywords: ["rag", "knowledge", "source", "persona"],
-        reply: "You can give a bot a persona via System Instructions, or add a knowledge source (RAG) by pasting reference facts into the prompt!"
-      },
-      {
-        keywords: ["bye", "goodbye"],
-        reply: "Goodbye! Switch to '2. LLM Mode' above to see how a real AI model handles conversation."
-      }
-    ];
-
-    /**
-     * Checks the user's message against KEYWORD_RULES.
-     * Notice it has NO memory of past messages and NO understanding of meaning.
-     */
-    function getRuleBasedReply(userText) {
-      const lower = userText.toLowerCase();
-
-      for (const rule of KEYWORD_RULES) {
-        for (const word of rule.keywords) {
-          if (lower.includes(word)) {
-            return {
-              reply: rule.reply,
-              trace: `Matched keyword "${word}" → returned hard-coded reply.`
-            };
-          }
-        }
-      }
-
-      // Fallback when no keyword matches
-      return {
-        reply: "I don't have a rule for that! Try 'hello', 'token', or switch to LLM Mode.",
-        trace: "No keyword matched → returned default fallback."
-      };
-    }
-
     // =========================================================================
     // 2. CONNECTING THE SAME APP TO A LANGUAGE MODEL (LLM)
     // =========================================================================
@@ -847,7 +746,7 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       if (btn) btn.textContent = isDark ? "Light Mode" : "Dark Mode";
     }
 
-    let currentMode = "rule"; // "rule" or "llm"
+    let currentMode = "llm";
     let savedChats = {};      // { chatId: { id, title, updatedAt, messages: [] } }
     let activeChatId = "chat_1";
     let chatHistory = [];     // Points to savedChats[activeChatId].messages
@@ -864,16 +763,7 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       } catch (err) {
         storageAvailable = false;
       }
-      const badge = document.getElementById("storage-badge");
-      if (badge) {
-        if (storageAvailable) {
-          badge.textContent = "Saved on Device";
-          badge.className = "text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium";
-        } else {
-          badge.textContent = "Session Only (Download HTML to save)";
-          badge.className = "text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-medium";
-        }
-      }
+
     }
 
     function ensureActiveChat() {
@@ -989,14 +879,8 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
     const llmControlsEl = document.getElementById("llm-controls");
     const tempSliderEl = document.getElementById("temp-slider");
     const tempValueEl = document.getElementById("temp-value");
-    const liveTraceEl = document.getElementById("live-trace");
-    const contextJsonEl = document.getElementById("context-json");
-    const turnCountEl = document.getElementById("turn-count");
-    const tokenBadgeEl = document.getElementById("token-badge");
     const statusDotEl = document.getElementById("status-dot");
     const statusLabelEl = document.getElementById("status-label");
-    const btnModeRule = document.getElementById("btn-mode-rule");
-    const btnModeLlm = document.getElementById("btn-mode-llm");
 
     function formatMessageHtml(raw) {
       const escaped = String(raw || "")
@@ -1037,46 +921,7 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
     }
 
-    function updateTelemetry(traceText) {
-      turnCountEl.textContent = chatHistory.length;
-
-      // Build the payload preview so the user sees what gets sent to an LLM
-      const payloadPreview = currentMode === "llm"
-        ? [{ role: "system", content: systemInputEl.value }, ...chatHistory]
-        : chatHistory;
-
-      const jsonStr = JSON.stringify(payloadPreview, null, 2);
-      contextJsonEl.textContent = jsonStr;
-
-      const totalTokens = chatHistory.reduce((sum, m) => sum + estimateTokens(m.content), 0)
-        + (currentMode === "llm" ? estimateTokens(systemInputEl.value) : 0);
-      tokenBadgeEl.textContent = `~${totalTokens} tokens`;
-
-      if (traceText) {
-        liveTraceEl.textContent = traceText;
-      }
-    }
-
-    function setMode(mode) {
-      currentMode = mode;
-      if (mode === "rule") {
-        btnModeRule.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
-        btnModeLlm.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
-        systemPromptBar.classList.add("hidden");
-        llmControlsEl.classList.add("hidden");
-        statusDotEl.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
-        statusLabelEl.textContent = "Rule-Based Engine (Keyword Matcher)";
-        updateTelemetry("Switched to Rule-Based mode. Only exact keywords will match.");
-      } else {
-        btnModeLlm.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
-        btnModeRule.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
-        systemPromptBar.classList.remove("hidden");
-        llmControlsEl.classList.remove("hidden");
-        statusDotEl.className = "w-2.5 h-2.5 rounded-full bg-indigo-500";
-        statusLabelEl.textContent = "LLM Mode (System Prompt + History + Temperature)";
-        updateTelemetry("Switched to LLM mode! Notice how System Instruction + History are sent together.");
-      }
-    }
+    function updateTelemetry(traceText) {}
 
     async function handleSend(text) {
       const trimmed = text.trim();
@@ -1096,15 +941,11 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       // 2. Route to either Rule-Based or LLM engine
       let result;
       try {
-        if (currentMode === "rule") {
-          result = getRuleBasedReply(trimmed);
-        } else {
-          result = await callLanguageModel(
-            systemInputEl.value,
-            chatHistory,
-            parseFloat(tempSliderEl.value)
-          );
-        }
+        result = await callLanguageModel(
+          systemInputEl.value,
+          chatHistory,
+          parseFloat(tempSliderEl.value)
+        );
       } catch (err) {
         result = {
           reply: `Something went wrong (${err.message}).`,
@@ -1140,8 +981,6 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       btn.addEventListener("click", () => handleSend(btn.dataset.prompt));
     });
 
-    btnModeRule.addEventListener("click", () => setMode("rule"));
-    btnModeLlm.addEventListener("click", () => setMode("llm"));
 
     tempSliderEl.addEventListener("input", () => {
       tempValueEl.textContent = tempSliderEl.value;
@@ -1401,6 +1240,51 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
     const btnGoogleSignIn = document.getElementById("btn-google-signin");
     const userBadgeEl = document.getElementById("user-badge");
     const btnLogoutEl = document.getElementById("btn-logout");
+    const btnSignInHeaderEl = document.getElementById("btn-signin-header");
+    const btnGuestLoginEl = document.getElementById("btn-guest-login");
+    const pageChatEl = document.getElementById("page-chat");
+    const pageHelpEl = document.getElementById("page-help");
+    const btnPageChat = document.getElementById("btn-page-chat");
+    const btnPageHelp = document.getElementById("btn-page-help");
+
+    function switchPage(page) {
+      if (page === "chat") {
+        pageChatEl.classList.remove("hidden");
+        pageHelpEl.classList.add("hidden");
+        btnPageChat.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
+        btnPageHelp.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
+      } else {
+        pageChatEl.classList.add("hidden");
+        pageHelpEl.classList.remove("hidden");
+        btnPageHelp.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-white text-indigo-700 shadow-sm";
+        btnPageChat.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all text-slate-600 hover:text-slate-900";
+      }
+    }
+    btnPageChat.addEventListener("click", () => switchPage("chat"));
+    btnPageHelp.addEventListener("click", () => switchPage("help"));
+
+    function enterGuestMode() {
+      currentUser = "Guest";
+      currentUid = null;
+      setAccountStorageKeys("guest");
+      savedChats = {};
+      activeChatId = "chat_1";
+      chatHistory = [];
+      sharedMemory = { name: null, notes: [] };
+      loadSavedState();
+      renderMessages();
+      userBadgeEl.textContent = "Guest";
+      userBadgeEl.classList.remove("hidden");
+      btnSignInHeaderEl.classList.remove("hidden");
+      btnLogoutEl.classList.add("hidden");
+      authOverlayEl.classList.add("hidden");
+    }
+
+    btnGuestLoginEl.addEventListener("click", enterGuestMode);
+    btnSignInHeaderEl.addEventListener("click", () => {
+      authOverlayEl.classList.remove("hidden");
+      setAuthMode("login");
+    });
 
     function setAuthMode(mode) {
       authMode = mode;
@@ -1470,13 +1354,10 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
           ? `Synced cloud account (${label}) · ${chatHistory.length} message(s) loaded.`
           : `Signed in as ${label}. Your chats sync securely to the cloud.`
       );
-      const badgeEl = document.getElementById("storage-badge");
-      if (badgeEl) {
-        badgeEl.textContent = "Cloud Synced";
-        badgeEl.className = "text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium";
-      }
+
       userBadgeEl.textContent = label.split("@")[0];
       userBadgeEl.classList.remove("hidden");
+      btnSignInHeaderEl.classList.add("hidden");
       btnLogoutEl.classList.remove("hidden");
       authOverlayEl.classList.add("hidden");
       authPasswordEl.value = "";
