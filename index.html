@@ -50,7 +50,7 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
-        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v2.1</span></h1>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v2.4</span></h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-1.5">
@@ -132,10 +132,16 @@
           value="You are a knowledgeable, professional AI Assistant. Provide clear, accurate, and concise answers grounded in the conversation context. If you are unsure of a fact, state that clearly rather than guessing."
           class="w-full text-xs sm:text-sm bg-white border border-indigo-200 rounded-lg px-3 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         <div class="flex flex-wrap items-center gap-2 pt-0.5">
-          <label for="api-key-input" class="text-[11px] font-semibold text-slate-600 shrink-0">Optional Gemini API Key:</label>
+          <label for="api-key-input" class="text-[11px] font-semibold text-slate-600 shrink-0">Gemini API Key:</label>
           <input id="api-key-input" type="password" autocomplete="off"
-            placeholder="Paste key for live AI answers (leave blank for built-in smart demo)"
-            class="flex-1 min-w-[200px] text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            placeholder="Paste fresh AI Studio key (leave blank for demo)"
+            class="flex-1 min-w-[160px] text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <select id="model-select" aria-label="Gemini model"
+            class="text-[11px] bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="gemini-3.8-flash">gemini-3.8-flash</option>
+            <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+          </select>
         </div>
       </div>
 
@@ -313,7 +319,11 @@
         </button>
         <button id="btn-modal-download" type="button"
           class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
-          Try File Download
+          Download File
+        </button>
+        <button id="btn-modal-share" type="button"
+          class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+          Share Text
         </button>
         <button id="btn-modal-restore" type="button"
           class="hidden px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors">
@@ -424,7 +434,7 @@
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(new Error("Request timed out after 45 seconds")), 45000);
           const res = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+            `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(document.getElementById("model-select")?.value || "gemini-3.8-flash")}:generateContent`,
             {
               method: "POST",
               signal: controller.signal,
@@ -449,7 +459,8 @@
           clearTimeout(timeoutId);
           if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            throw new Error(errData?.error?.message || `API error (${res.status})`);
+            const msg = errData?.error?.message || res.statusText || "Request rejected";
+            throw new Error(`HTTP ${res.status}: ${msg}`);
           }
           const data = await res.json();
           const parts = data?.candidates?.[0]?.content?.parts || [];
@@ -1049,13 +1060,20 @@ function onUserSend(text) {
 
     function triggerDownload(filename, mime, content) {
       try {
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = `data:${mime};charset=utf-8,` + encodeURIComponent(content);
+        a.href = url;
         a.download = filename;
+        a.rel = "noopener";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      } catch (err) {}
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        return true;
+      } catch (err) {
+        return false;
+      }
     }
 
     document.getElementById("btn-close-modal").addEventListener("click", () => {
@@ -1080,7 +1098,19 @@ function onUserSend(text) {
     });
 
     btnModalDownload.addEventListener("click", () => {
-      triggerDownload(modalFileInfo.filename, modalFileInfo.mime, modalFileInfo.content);
+      const ok = triggerDownload(modalFileInfo.filename, modalFileInfo.mime, modalFileInfo.content);
+      btnModalDownload.textContent = ok ? "Download Started!" : "Blocked by Browser";
+      setTimeout(() => { btnModalDownload.textContent = "Download File"; }, 2500);
+    });
+
+    document.getElementById("btn-modal-share").addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: modalFileInfo.filename, text: modalFileInfo.content });
+        } catch (err) {}
+      } else {
+        modalDescEl.textContent = "Share is not supported in this browser—use 'Copy to Clipboard' or 'Download File'.";
+      }
     });
 
     document.getElementById("btn-save-app").addEventListener("click", () => {
