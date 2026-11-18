@@ -53,7 +53,7 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
-        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.0</span></h1>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.1</span></h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-1.5">
@@ -821,6 +821,30 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       STORAGE_KEY_ACTIVE_CHAT = `chatbot_basics_active_chat_v2__${uid}`;
       STORAGE_KEY_SYSTEM = `chatbot_basics_system_v2__${uid}`;
       STORAGE_KEY_MEMORY = `chatbot_basics_shared_memory_v2__${uid}`;
+    }
+
+    function getPreviousConversationsContext() {
+      const otherChats = Object.values(savedChats)
+        .filter(c => c.id !== activeChatId && Array.isArray(c.messages) && c.messages.length > 0);
+      if (otherChats.length === 0) return { summaryText: "", chatCount: 0, msgCount: 0 };
+
+      let totalMsgs = 0;
+      const lines = otherChats.slice(-5).map(chat => {
+        const recent = chat.messages.slice(-6).map(m => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`).join(" | ");
+        totalMsgs += chat.messages.length;
+        return `[Chat "${chat.title}"]: ${recent}`;
+      });
+      return {
+        summaryText: lines.join("\n"),
+        chatCount: otherChats.length,
+        msgCount: totalMsgs
+      };
+    }
+
+    function applyTheme(isDark) {
+      document.documentElement.classList.toggle("dark", isDark);
+      const btn = document.getElementById("btn-dark-mode");
+      if (btn) btn.textContent = isDark ? "Light Mode" : "Dark Mode";
     }
 
     let currentMode = "rule"; // "rule" or "llm"
