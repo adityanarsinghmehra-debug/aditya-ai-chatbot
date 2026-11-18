@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <title>AI Basics: Rule-Based vs. LLM Chatbot</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,7 +56,7 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
-        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.4</span></h1>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.5</span></h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-1.5">
@@ -1432,6 +1435,12 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
     } else {
       testDeviceStorage();
       setAuthMode("login");
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
     }
   </script>
 </body>
