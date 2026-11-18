@@ -56,7 +56,7 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-bold">AI</span>
-        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.5</span></h1>
+        <h1 class="text-sm sm:text-base font-bold text-slate-900">Chatbot Basics Lab <span class="text-[10px] font-normal text-slate-400">v4.6</span></h1>
       </div>
 
       <div class="flex flex-wrap items-center gap-1.5">
@@ -143,14 +143,14 @@
           class="w-full text-xs sm:text-sm bg-white border border-indigo-200 rounded-lg px-3 py-1.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         <div class="flex flex-wrap items-center gap-2 pt-0.5">
           <label for="api-key-input" class="text-[11px] font-semibold text-slate-600 shrink-0">Gemini API Key:</label>
-          <input id="api-key-input" type="password" autocomplete="off"
+          <input id="api-key-input" name="gemini_api_key_field" type="password" autocomplete="new-password"
             placeholder="Paste fresh AI Studio key (leave blank for demo)"
             class="flex-1 min-w-[160px] text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           <select id="model-select" aria-label="Gemini model"
             class="text-[11px] bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="gemini-3.8-flash">gemini-3.8-flash</option>
+            <option value="gemini-3.5-flash-lite" selected>gemini-3.5-flash-lite (Fast)</option>
             <option value="gemini-3.6-flash">gemini-3.6-flash</option>
-            <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite</option>
+            <option value="gemini-3.8-flash">gemini-3.8-flash</option>
           </select>
         </div>
         <div id="llm-controls" class="flex items-center gap-3 pt-1">
@@ -390,11 +390,11 @@
 
       // If the user provided a Gemini API key, call the live Gemini model with auto-fallback on 503/429!
       if (apiKey) {
-        const primaryModel = document.getElementById("model-select")?.value || "gemini-3.8-flash";
-        const fallbackOrder = [primaryModel, "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
+        const primaryModel = document.getElementById("model-select")?.value || "gemini-3.5-flash-lite";
+        const fallbackOrder = [primaryModel, "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.8-flash"];
         const modelsToTry = Array.from(new Set(fallbackOrder));
 
-        const cleanHistory = history.filter(m => !m.isError);
+        const cleanHistory = history.filter(m => !m.isError).slice(-20);
         const contents = cleanHistory.map(m => ({
           role: m.role === "assistant" ? "model" : "user",
           parts: [{ text: m.content }]
@@ -926,9 +926,11 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
 
     function updateTelemetry(traceText) {}
 
+    let isSending = false;
     async function handleSend(text) {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed || isSending) return;
+      isSending = true;
 
       // 1. Add user message to history
       chatHistory.push({ role: "user", content: trimmed });
@@ -961,6 +963,7 @@ Try asking one of those—or add a Gemini API key anytime for open-ended web top
       saveHistoryToDevice();
       renderMessages();
       updateTelemetry(result.trace);
+      isSending = false;
     }
 
     // Event Listeners
